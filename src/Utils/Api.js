@@ -144,3 +144,41 @@ export const removeFromGroup = async (token,chatId,userId) => {
     throw error;
   }
 }
+
+export const sendMessageApi = async (token,chatId,content) =>{
+
+  try {
+    const config = {
+      headers:{
+        "Content-Type": "application/json",
+        Authorization:`Bearer ${token}`
+      }
+    }
+
+    const response = await axios.post("/api/messages",{chatId,content},config)
+    return response.data
+
+    
+  } catch (error) {
+    console.log("error occured in accessChatApi =" + error);
+    throw error;
+  }
+}
+
+export const fetchMessageApi = async (token,chatId) => {
+  try {
+    const config = {
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    }
+    
+    const response = await axios.get(`/api/messages/${chatId}`,config)
+    return response.data
+
+    
+  } catch (error) {
+    console.log("error occured in accessChatApi =" + error);
+    throw error;
+  }
+}

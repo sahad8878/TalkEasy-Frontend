@@ -7,7 +7,7 @@ import Modal from "./Miscellaneous/Modal";
 import UserItemLlist from "./UserAvatar/UserItemLlist";
 import UserBadgeItem from "./UserAvatar/UserBadgeItem";
 
-function MyChat({fetchAgain}) {
+function MyChat({ fetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
   const [isModalOpen, setModalOpen] = useState(false);
   const [groupChatName, setGroupChatName] = useState();
@@ -37,38 +37,34 @@ function MyChat({fetchAgain}) {
     if (!query) {
       return;
     }
-    setLoading(true)
-    const data = await searchUser(user.token,search)
-    console.log(data,"search data form");
-    setSearchResult(data)
-    setLoading(false)
+    setLoading(true);
+    const data = await searchUser(user.token, search);
+    console.log(data, "search data form");
+    setSearchResult(data);
+    setLoading(false);
   };
-  const handleSubmit = async() => {
-  if(!groupChatName || !selectedUsers) {
-   alert("please fill the group chat name")
-   return
-  }
-    
-    const data = await createGroup(user.token,groupChatName,selectedUsers)
-    console.log(data,"group chat data ");
-    setChats([data,...chats])
-    handleCloseModal()
-    alert("new group added")
+  const handleSubmit = async () => {
+    if (!groupChatName || !selectedUsers) {
+      alert("please fill the group chat name");
+      return;
+    }
+
+    const data = await createGroup(user.token, groupChatName, selectedUsers);
+    console.log(data, "group chat data ");
+    setChats([data, ...chats]);
+    handleCloseModal();
+    alert("new group added");
   };
   const handleGroup = (userToAdd) => {
-    if(selectedUsers.includes(userToAdd)){
-      alert("user already added")
-      return
+    if (selectedUsers.includes(userToAdd)) {
+      alert("user already added");
+      return;
     }
-    setSelectedUsers([...selectedUsers,userToAdd])
+    setSelectedUsers([...selectedUsers, userToAdd]);
   };
   const handleDelete = (deleteUser) => {
-
-    setSelectedUsers(selectedUsers.filter(sel => sel._id !== deleteUser._id))
+    setSelectedUsers(selectedUsers.filter((sel) => sel._id !== deleteUser._id));
   };
-
-
-
 
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
@@ -106,26 +102,33 @@ function MyChat({fetchAgain}) {
                 />
                 {/* selectedl users */}
                 <div className="flex flex-wrap w-[100%]">
-
-                {selectedUsers?.map((user) => (
-                  <UserBadgeItem key={user._id} user={user} handleFunction={()=> handleDelete(user)} />
-                ))}
+                  {selectedUsers?.map((user) => (
+                    <UserBadgeItem
+                      key={user._id}
+                      user={user}
+                      handleFunction={() => handleDelete(user)}
+                    />
+                  ))}
                 </div>
                 {/* render search users */}
-                {
-                  loading ? <div>loading...</div> :
-                  searchResult?.slice(0,4).map((user) => (
-              
-                    <UserItemLlist key={user._id} user={user} 
-                    handleFunction={() => handleGroup(user)}
-                    />
-                  ))
-                }
+                {loading ? (
+                  <div>loading...</div>
+                ) : (
+                  searchResult
+                    ?.slice(0, 4)
+                    .map((user) => (
+                      <UserItemLlist
+                        key={user._id}
+                        user={user}
+                        handleFunction={() => handleGroup(user)}
+                      />
+                    ))
+                )}
                 <div className=" text-center">
-                <button className="bg-slate-300 p-1 " onClick={handleSubmit}>Create chat</button>
-
+                  <button className="bg-slate-300 p-1 " onClick={handleSubmit}>
+                    Create chat
+                  </button>
                 </div>
-
               </form>
 
               <div className="flex justify-end my-4">

@@ -5,7 +5,7 @@ import { chatState } from "../../Context/ChatProvider";
 import Modal from "./Modal";
 import { useNavigate } from "react-router";
 
-const Dropdown = ({ options, selectedOption, onSelect }) => {
+const ProfileDropDown = ({ options, selectedOption, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const { user } = chatState();
@@ -66,4 +66,4 @@ const Dropdown = ({ options, selectedOption, onSelect }) => {
   );
 };
 
-export default Dropdown;
+export default ProfileDropDown;

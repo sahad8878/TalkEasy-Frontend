@@ -1,0 +1,15 @@
+.messages {
+     display: flex;
+     flex-direction: column;
+     overflow-y: scroll;
+     scrollbar-width: none;
+     
+}
+.dots-pattern {
+     background-color: #dbe8f1; /* Blue background color */
+     background-image:
+       radial-gradient(rgba(255, 255, 255, 0.2) 2px, transparent 2px),
+       radial-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 1px);
+     background-size: 10px 10px; /* Adjust the size of the pattern */
+     background-position: 0 0, 50px 50px; /* Offset the second layer */
+   }
