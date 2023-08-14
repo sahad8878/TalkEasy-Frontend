@@ -13,3 +13,8 @@
      background-size: 10px 10px; /* Adjust the size of the pattern */
      background-position: 0 0, 50px 50px; /* Offset the second layer */
    }
+.dots-pattern-header {
+     background-color:#e5eef4; /* Blue background color */
+     background-image: radial-gradient(	rgb(243, 204, 213) 1px, transparent 1px);
+     background-size: 3px 3px; /* Adjust the size of the dots */
+   }

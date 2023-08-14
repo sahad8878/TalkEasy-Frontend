@@ -6,12 +6,14 @@ import { accessChatApi, searchUser } from "../../Utils/Api";
 import { chatState } from "../../Context/ChatProvider";
 import UserItemLlist from "../UserAvatar/UserItemLlist";
 import { getSender } from "../../Utils/ChatLogics";
-import '../style.css'
+import "../style.css";
+import logo from "../../assets/talkeasy-logo.png";
+import { ColorRing } from "react-loader-spinner";
 
 function SideDrower() {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState();
-  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  
   const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [chaLoading, setChatLoading] = useState();
@@ -35,17 +37,19 @@ function SideDrower() {
     setOpen(false);
   };
 
-  const handleSearch = async () => {
-    if (!search) {
+  // handle search 
+  const handleSearch = async (query) => {
+    setSearch(query);
+    if (!query) {
       setSearchResults([]);
-      setError("Enter search values");
-
+    
       return;
     }
     setLoading(true);
     const data = await searchUser(user.token, search);
-    console.log(data, "search");
     setSearchResults(data);
+
+
     setLoading(false);
   };
 
@@ -61,9 +65,9 @@ function SideDrower() {
   };
 
   return (
-    <div className=" flex justify-between items-center py-5 px-3 dots-pattern  ">
+    <div className=" flex justify-between items-center py-1 px-8 bg-white shadow-lg  ">
       <div
-        className="flex hover:bg-[#CCD5AE] cursor-pointer "
+        className="flex hover:text-[#f3ccd5] cursor-pointer justify-center items-center  "
         onClick={showDrawer}
       >
         <i className="fa-solid fa-magnifying-glass  "> </i>
@@ -72,43 +76,74 @@ function SideDrower() {
         </span>
       </div>
       <Drawer
-        title="Searach Users"
+          title={
+            <div className="flex justify-between items-center">
+              Search Users
+              <div onClick={onClose} className="cursor-pointer">
+              <i class="fa-solid fa-xmark" ></i>
+      </div>
+            
+            </div>
+          }
         placement={"left"}
         closable={false}
-        width={300}
+        // width={300}
         onClose={onClose}
         open={open}
         key={"left"}
       >
         <input
           type="text"
+        
           value={search}
           onChange={(e) => {
-            setSearch(e.target.value);
-            setError("");
+            handleSearch(e.target.value);
+    
           }}
-          className="px-2 py-1 border "
+          className="px-2 py-1 border w-full "
           placeholder="search by name or email"
         />
-        <button onClick={handleSearch} className="bg-slate-300 py-1 px-3 ml-1">
-          Go
-        </button>
-        {error !== "" && <h1 className="text-red-500">{error}</h1>}
+   
         {loading ? (
-          <div>loading</div>
+          <div className="flex justify-center items-center ">
+            <ColorRing
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="blocks-loading"
+              wrapperStyle={{}}
+              wrapperClass="blocks-wrapper"
+              colors={["#f3ccd5", "#f3ccd5", "#f3ccd5"]}
+            />
+          </div>
         ) : (
           searchResults &&
           searchResults?.map((user) => (
-            <UserItemLlist
-              key={user._id}
-              user={user}
-              handleFunction={() => accessChat(user._id)}
-            />
+            <div key={user._id} className="m-1">
+              <UserItemLlist
+                user={user}
+                handleFunction={() => accessChat(user._id)}
+              />
+            </div>
           ))
         )}
-        {chaLoading && <div>spinning.....</div>}
+        {chaLoading && (
+          <div className="flex justify-center items-center ">
+            <ColorRing
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="blocks-loading"
+              wrapperStyle={{}}
+              wrapperClass="blocks-wrapper"
+              colors={["#f3ccd5", "#f3ccd5", "#f3ccd5"]}
+            />
+          </div>
+        )}
       </Drawer>
-      <h1>TalkEasy</h1>
+      <div>
+        <img src={logo} className="w-32" alt="" />
+      </div>
       <div className="flex justify-center items-center gap-4">
         <Dropdown
           overlay={
@@ -128,11 +163,11 @@ function SideDrower() {
                     setNotification(notification.filter((n) => n !== item));
                   }}
                 >
-                  <a target="_blank" rel="noopener noreferrer" href={item.link}>
+                  <p>
                     {item.chat.isGroupChat
                       ? `new message in ${item.chat.chatName}`
                       : `New message from ${getSender(user, item.chat.users)}`}
-                  </a>
+                  </p>
                 </div>
               ))}
             </div>
@@ -145,13 +180,13 @@ function SideDrower() {
             </div>
           )}
         >
-          <a onClick={(e) => e.preventDefault()}>
+          <p onClick={(e) => e.preventDefault()} className="cursor-pointer">
             <Space>
               <Badge count={notification.length} size="small">
-                <i class="fa-solid fa-bell"></i>
+                <i className="fa-solid fa-bell hover:text-[#f3ccd5]"></i>
               </Badge>
             </Space>
-          </a>
+          </p>
         </Dropdown>
         <ProfileDropDown />
       </div>

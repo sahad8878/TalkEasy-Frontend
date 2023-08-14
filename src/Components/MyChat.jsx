@@ -6,8 +6,10 @@ import Modal from "./Miscellaneous/Modal";
 
 import UserItemLlist from "./UserAvatar/UserItemLlist";
 import UserBadgeItem from "./UserAvatar/UserBadgeItem";
+import { Tooltip, message } from "antd";
+import { ColorRing } from "react-loader-spinner";
 
-function MyChat({ fetchAgain }) {
+function MyChat({ fetchAgain,setFetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
   const [isModalOpen, setModalOpen] = useState(false);
   const [groupChatName, setGroupChatName] = useState();
@@ -19,9 +21,7 @@ function MyChat({ fetchAgain }) {
   const { user, selectedChat, setSelectedChat, chats, setChats } = chatState();
 
   const fechChats = async () => {
-    console.log("chat page");
     const data = await fetchChatsApi(user.token);
-    console.log(data, "chat");
     setChats(data);
   };
   const handleOpenModal = () => {
@@ -30,38 +30,53 @@ function MyChat({ fetchAgain }) {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+
   };
 
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
+      setSearchResult([])
       return;
     }
     setLoading(true);
     const data = await searchUser(user.token, search);
-    console.log(data, "search data form");
     setSearchResult(data);
     setLoading(false);
   };
-  const handleSubmit = async () => {
-    if (!groupChatName || !selectedUsers) {
-      alert("please fill the group chat name");
+  
+  // handle the group creation
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!groupChatName ) {
+      message.info("Please fill the group chat name");
+      return;
+    }
+    if(selectedUsers.length < 2){
+      message.info("Please select minimum 2 users");
       return;
     }
 
     const data = await createGroup(user.token, groupChatName, selectedUsers);
-    console.log(data, "group chat data ");
     setChats([data, ...chats]);
+    setFetchAgain(!fetchAgain)
     handleCloseModal();
-    alert("new group added");
+    setSearchResult([])
+    setSelectedUsers([])
+    setGroupChatName("")
+    message.success("New group added successfully");
   };
+
+  // add user to group
   const handleGroup = (userToAdd) => {
     if (selectedUsers.includes(userToAdd)) {
-      alert("user already added");
+      message.info("User already exists in the group");
       return;
     }
     setSelectedUsers([...selectedUsers, userToAdd]);
   };
+
+  // delete user from the selected users list
   const handleDelete = (deleteUser) => {
     setSelectedUsers(selectedUsers.filter((sel) => sel._id !== deleteUser._id));
   };
@@ -70,21 +85,21 @@ function MyChat({ fetchAgain }) {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fechChats();
   }, [fetchAgain]);
+
   return (
     <div
       className={`${
         selectedChat ? "hidden" : " block"
-      } md:flex md:w-[30%] w-[100%]  bg-white p-3 h-[515px]  `}
+      } md:flex md:w-[30%] w-[100%] h-[400px] md:h-[600px] bg-white p-3  flex-col justify-between `}
     >
       <div className="w-full ">
-        <div className="  flex justify-between">
-          <h1>My chats</h1>
-          <button onClick={handleOpenModal} className=" p-2 bg-slate-300">
-            New Group Chat <i class="fa-solid fa-plus"></i>
-          </button>
+        <div className="  ">
+          <h1 className="font-serif text-lg font-medium">My chats</h1>
+
+          {/* modal */}
           <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
             <div className=" sm:w-[300px]">
-              <div className="text-center font-semibold text-lg">
+              <div className="text-center font-semibold font-serif mb-4 text-lg">
                 Greate group Chat
               </div>
               <form className="flex flex-col gap-3">
@@ -112,7 +127,17 @@ function MyChat({ fetchAgain }) {
                 </div>
                 {/* render search users */}
                 {loading ? (
-                  <div>loading...</div>
+                  <div className=" flex justify-center items-center ">
+                    <ColorRing
+                      visible={true}
+                      height="80"
+                      width="80"
+                      ariaLabel="blocks-loading"
+                      wrapperStyle={{}}
+                      wrapperClass="blocks-wrapper"
+                      colors={["#f3ccd5", "#f3ccd5", "#f3ccd5"]}
+                    />
+                  </div>
                 ) : (
                   searchResult
                     ?.slice(0, 4)
@@ -125,7 +150,10 @@ function MyChat({ fetchAgain }) {
                     ))
                 )}
                 <div className=" text-center">
-                  <button className="bg-slate-300 p-1 " onClick={handleSubmit}>
+                  <button
+                    className="bg-slate-400 hover:opacity-75 p-1 font-medium rounded-lg "
+                    onClick={handleSubmit}
+                  >
                     Create chat
                   </button>
                 </div>
@@ -134,26 +162,27 @@ function MyChat({ fetchAgain }) {
               <div className="flex justify-end my-4">
                 <button
                   onClick={handleCloseModal}
-                  className="bg-slate-400 px-2 rounded-lg flex justify-center"
+                  className="bg-slate-200 px-4 rounded-lg flex justify-center"
                 >
-                  close
+                  Close
                 </button>
               </div>
             </div>
           </Modal>
+          {/* modal end */}
         </div>
-        <div className="">
+        <div className="h-[300px] md:h-[400px] no-scrollbar overflow-y-scroll">
           {chats ? (
-            <div className=" overflow-y-auto whitespace-nowrap p-4">
+            <div className=" overflow-y-auto whitespace-nowrap ">
               {chats.map((chat) => (
                 <div
                   key={chat._id}
                   onClick={() => setSelectedChat(chat)}
                   className={`${
                     selectedChat === chat
-                      ? "bg-gray-800 text-white "
-                      : "bg-stone-700 text-black"
-                  } cursor-pointer m-2 p-1`}
+                      ? "bg-slate-100 text-vlack "
+                      : "bg-white shadow-sm text-black"
+                  } cursor-pointer hover:bg-slate-100 m-2 p-1`}
                 >
                   <h1>
                     {!chat.isGroupChat
@@ -164,9 +193,29 @@ function MyChat({ fetchAgain }) {
               ))}
             </div>
           ) : (
-            <div>spinning</div>
+            <div className=" flex justify-center items-center mt-10">
+              <ColorRing
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#f3ccd5", "#f3ccd5", "#f3ccd5"]}
+              />
+            </div>
           )}
         </div>
+      </div>
+      <div className="">
+        <Tooltip placement="bottom" title={"Create new group"}>
+          <button
+            onClick={handleOpenModal}
+            className=" w-10 h-10 shadow hover:bg-[#f3ccd5] rounded-full"
+          >
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import React from "react";
-import ScrollableFeed from "react-scrollable-feed";
 import {
   isLastMessage,
   isSameSender,
@@ -12,7 +11,7 @@ import { Avatar } from "antd";
 const ScrollableChat = ({ messages }) => {
   const { user } = chatState();
   return (
-    <ScrollableFeed>
+    <div>
       {messages &&
         messages.map((message, i) => (
           <div key={message._id} className="flex">
@@ -22,27 +21,30 @@ const ScrollableChat = ({ messages }) => {
                 <Avatar size={25} src={user.pic} />
               </div>
             )}
-            <span
+            <div
               className={`${
                 message.sender._id === user._id
-                  ? "bg-red-400"
-                  : "bg-fuchsia-400"
-              } rounded-2xl ${
+                  ? "bg-[#00000040] text-black border"
+                  : "bg-black text-white"
+              } rounded-2xl px-2 py-1 ${
                 isSameSenderMargin(messages, message, i, user._id) === 33
                   ? "ml-8"
                   : isSameSenderMargin(messages, message, i, user._id) ===
                     "auto"
-                  ? "ml-auto"
+                  ? "ml-auto "
                   : ""
               } 
-              ${isSameUser(messages,message,i,user._id) ? "mt-[3px]" :"mt-[10px]"}
-              `}
+              ${
+                isSameUser(messages, message, i, user._id)
+                  ? "mt-[3px]"
+                  : "mt-[10px]"
+              } break-words max-w-[90%] md:max-w-[50%] `}
             >
               {message.content}
-            </span>
+            </div>
           </div>
         ))}
-    </ScrollableFeed>
+    </div>
   );
 };
 

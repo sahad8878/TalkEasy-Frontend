@@ -9,8 +9,8 @@ const {selectedChat} = chatState()
   return (
     <div className={`
     ${selectedChat ? "block" : "hidden"} 
-     md:block w-[70%] bg-white p-3 h-[515px] 
-    
+     md:block w-[100%] md:w-[70%] bg-white md:p-3 h-[400px] md:h-[600px] 
+  
     `}>
     <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
     </div>
