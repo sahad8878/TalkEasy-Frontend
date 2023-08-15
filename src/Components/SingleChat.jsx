@@ -169,7 +169,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               </>
             )}
           </div>
-          <div className="flex  flex-col justify-between    w-full h-[95%]">
+          <div className="flex  flex-col justify-between    w-ful h-[90%] md:h-[95%]">
             {loading ? (
               <div className="flex justify-center items-center h-full">
                 <ColorRing
