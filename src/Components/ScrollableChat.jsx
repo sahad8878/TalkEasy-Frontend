@@ -9,7 +9,6 @@ import { chatState } from "../Context/ChatProvider";
 import { Avatar } from "antd";
 
 const ScrollableChat = ({ messages }) => {
-  console.log(messages,"messages");
   const { user } = chatState();
   return (
     <div>

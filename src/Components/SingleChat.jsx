@@ -7,7 +7,7 @@ import { fetchMessageApi, sendMessageApi } from "../Utils/Api";
 import "./style.css";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
-import { ColorRing } from "react-loader-spinner";
+import { ColorRing, ThreeDots } from "react-loader-spinner";
 
 // const ENDPOINT = "http://localhost:5000";
 const ENDPOINT = "https://talkeeasy-backend.onrender.com";
@@ -23,9 +23,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-
-
-
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -116,7 +113,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       {selectedChat ? (
         <div className="h-full px-2 md:px-0">
           <div className="flex justify-between   mb-3 ">
-          
             <button
               className="block md:hidden "
               onClick={() => setSelectedChat("")}
@@ -124,15 +120,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               <i class="fa-solid fa-arrow-left"></i>
             </button>
 
-         
             {!selectedChat.isGroupChat ? (
               <>
-              <div className="font-serif font-semibold ">
-
-                {getSender(user, selectedChat.users)}
-              </div>
-                <div >
-                  <div onClick={handleOpenModal} className="cursor-pointer" >
+                <div className="font-serif font-semibold ">
+                  {getSender(user, selectedChat.users)}
+                </div>
+                <div>
+                  <div onClick={handleOpenModal} className="cursor-pointer">
                     <i className="fa-regular fa-eye"></i>
                   </div>
                   <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
@@ -163,14 +157,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               </>
             ) : (
               <>
-                <div className="font-semibold">{selectedChat.chatName.toUpperCase()}</div>
-              
+                <div className="font-semibold">
+                  {selectedChat.chatName.toUpperCase()}
+                </div>
+
                 <UpdateGroupChatModel
                   fetchAgain={fetchAgain}
                   setFetchAgain={setFetchAgain}
                   fetchMessages={fetchMessages}
                 />
-             
               </>
             )}
           </div>
@@ -194,7 +189,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             )}
             <div className="mt-2">
               <form onKeyDown={sendMessage}>
-                {isTyping ? <div className="h-7 w-9">loading</div> : <></>}
+                {isTyping ? (
+                  <div className="h-7 w-9">
+                    <ThreeDots
+                      height="60"
+                      width="60"
+                      radius="9"
+                      color="#4fa94d"
+                      ariaLabel="three-dots-loading"
+                      wrapperStyle={{}}
+                      wrapperClassName=""
+                      visible={true}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <input
                   type="text"
                   onChange={typingHandler}

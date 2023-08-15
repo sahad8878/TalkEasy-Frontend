@@ -85,7 +85,7 @@ function MyChat({ fetchAgain,setFetchAgain }) {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fechChats();
   }, [fetchAgain]);
-console.log(chats,"chat");
+
   return (
     <div
       className={`${
