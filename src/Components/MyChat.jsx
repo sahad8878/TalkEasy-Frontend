@@ -53,7 +53,7 @@ function MyChat({ fetchAgain,setFetchAgain }) {
       return;
     }
     if(selectedUsers.length < 2){
-      message.info("Please select minimum 2 users");
+      message.info("More than 2 users are required to form a group chat");
       return;
     }
 

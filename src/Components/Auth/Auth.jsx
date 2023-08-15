@@ -33,7 +33,6 @@ function Auth({ tab }) {
             "https://api.cloudinary.com/v1_1/deovgjvlr/upload",
             data
           );
-          console.log(res.data, "response");
           setPic(res.data.url);
           setLoading(false);
         } catch (err) {
@@ -51,7 +50,7 @@ function Auth({ tab }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(email, name, password, confirmPassword, "total");
+
     if (tab === "login") {
       if (!email || !password) {
         message.error("please fill all the fields");
@@ -59,9 +58,15 @@ function Auth({ tab }) {
         return;
       }
       const postData = { email, password };
-      const data = await loginUser(postData);
-      message.success("Your successfully logged in");
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      try {
+        const data = await loginUser(postData);
+        message.success("Your successfully logged in");
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      } catch (error) {
+        message.error(error.response.data.message);
+        setLoading(false);
+        return;
+      }
     } else {
       if (!email || !name || !password || !confirmPassword) {
         message.error("please fill all the fields");
@@ -81,9 +86,15 @@ function Auth({ tab }) {
         password,
         pic,
       };
-      const data = await registerUser(forData);
-      message.success("Your registration has been successfully completed");
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      try {
+        const data = await registerUser(forData);
+        message.success("Your registration has been successfully completed");
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      } catch (error) {
+        message.error(error.response.data.message);
+        setLoading(false);
+        return;
+      }
     }
 
     setLoading(false);
@@ -161,11 +172,11 @@ function Auth({ tab }) {
         <button
           onClick={handleSubmit}
           disabled={loading}
+          type="button"
           className="bg-[#f3ccd5] rounded-lg hover:bg-opacity-75 w-full p-1.5 mt-6"
         >
           {loading ? "Loading.. " : tab === "login" ? "Login" : "Signup"}
         </button>
-      
       </div>
     </form>
   );
