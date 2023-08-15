@@ -9,10 +9,11 @@ import { chatState } from "../Context/ChatProvider";
 import { Avatar } from "antd";
 
 const ScrollableChat = ({ messages }) => {
+  console.log(messages,"messages");
   const { user } = chatState();
   return (
     <div>
-      {messages &&
+      {messages.length > 0 ?
         messages.map((message, i) => (
           <div key={message._id} className="flex">
             {(isSameSender(messages, message, i, user._id) ||
@@ -43,7 +44,11 @@ const ScrollableChat = ({ messages }) => {
               {message.content}
             </div>
           </div>
-        ))}
+        ))
+      : <div className="flex justify-center items-center mt-20 font-medium text-lg">
+        No messages exist..! start your chat
+      </div>
+      }
     </div>
   );
 };

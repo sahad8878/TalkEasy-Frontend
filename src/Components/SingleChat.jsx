@@ -125,7 +125,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
          
             {!selectedChat.isGroupChat ? (
               <>
-              <div className="font-serif font-semibold">
+              <div className="font-serif font-semibold ">
 
                 {getSender(user, selectedChat.users)}
               </div>
@@ -161,7 +161,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               </>
             ) : (
               <>
-                <div>{selectedChat.chatName.toUpperCase()}</div>
+                <div className="font-semibold">{selectedChat.chatName.toUpperCase()}</div>
               
                 <UpdateGroupChatModel
                   fetchAgain={fetchAgain}
