@@ -9,7 +9,9 @@ import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import { ColorRing } from "react-loader-spinner";
 
-const ENDPOINT = "http://localhost:5000";
+// const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://talkeeasy-backend.onrender.com";
+
 var socket, selectedChatCompare;
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedChat, setSelectedChat, notification, setNotification } =

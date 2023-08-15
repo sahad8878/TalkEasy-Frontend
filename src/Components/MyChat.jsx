@@ -85,7 +85,7 @@ function MyChat({ fetchAgain,setFetchAgain }) {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fechChats();
   }, [fetchAgain]);
-
+console.log(chats,"chat");
   return (
     <div
       className={`${
@@ -173,6 +173,8 @@ function MyChat({ fetchAgain,setFetchAgain }) {
         </div>
         <div className="h-[300px] md:h-[400px] no-scrollbar overflow-y-scroll">
           {chats ? (
+            chats.length > 0 ?
+
             <div className=" overflow-y-auto whitespace-nowrap ">
               {chats.map((chat) => (
                 <div
@@ -192,6 +194,8 @@ function MyChat({ fetchAgain,setFetchAgain }) {
                 </div>
               ))}
             </div>
+            :
+            <div className="flex justify-center items-center mt-8 font-medium text-base">No chat Exist..! Search user and start chating</div>
           ) : (
             <div className=" flex justify-center items-center mt-10">
               <ColorRing
