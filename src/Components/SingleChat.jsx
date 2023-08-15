@@ -187,10 +187,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <ScrollableChat messages={messages} />
               </div>
             )}
-            <div className="mt-2">
-              <form onKeyDown={sendMessage}>
-                {isTyping ? (
-                  <div className="h-7 w-9">
+                {isTyping && (
+                  <div className="h-7 w-9 ">
                     <ThreeDots
                       height="60"
                       width="60"
@@ -202,9 +200,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                       visible={true}
                     />
                   </div>
-                ) : (
-                  <></>
-                )}
+                )
+                }
+            <div className="mt-2">
+              <form onKeyDown={sendMessage}>
                 <input
                   type="text"
                   onChange={typingHandler}
